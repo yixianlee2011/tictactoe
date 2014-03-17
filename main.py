@@ -29,43 +29,24 @@ def verify_service(requestJSON, url):
 # application is embedded within an App Engine WSGI application server.
 bottle = Bottle()
 
-@bottle.route('/currentplayer')
+@bottle.route('/api/currentplayer')
 def currentplayer():
   d = {"name":str(users.get_current_user())}
   return json.dumps(d)
 
 def verify(problem, tests, url):
-  d = {"tests":">>> b \n 2", "solution":"b=3"}
+  d = {"tests":tests, "solution":problem}
   requestJSON = json.dumps(d)
   result = verify_service(requestJSON,url)
   return result
 
-@bottle.route('/use_verify_service')
+@bottle.route('/api/use_verify_service')
 def use_verify_service():
   url = "http://ec2-54-251-204-6.ap-southeast-1.compute.amazonaws.com/python"
   problem = request.params.get('problem')
   tests = request.params.get('tests')
   result = verify(problem, tests, url)
   return result 
-
-@bottle.route('/')
-def home():
-  """ Return Hello World at application root URL"""
-  continue_url = request.params.get('continue')
-  #redirect(users.create_login_url(continue_url))
-  result = "Hello"+"<br>"
-  result += str(continue_url)+"<br>"
-  result += str(users.get_current_user())+"<br>"
-  result += "<a href='"+users.create_login_url('/')+"'>login</a><br>"
-  result += "<a href='"+users.create_logout_url('/')+"'>logout</a><br>"
-  result += "<a href='/currentplayer'>currentplayer api</a><br>"
-  result += "<a href='/use_verify_service'>use_verify_service api</a><br>"
-  result += "Enter your bot code:<br> <textarea></textarea><br>"
-  result += "Enter your tests:<br> <textarea></textarea><br>"
-  result += "<input type=submit value='Verify code with service'><br>"
-  result += "Results returned from verfier service:<br> <pre>{}</pre>"
-  return result
-
 
 @bottle.error(404)
 def error_404(error):

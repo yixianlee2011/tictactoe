@@ -23,8 +23,8 @@ handlers:
 # This handler tells app engine how to route requests to a WSGI application.
 # The script value is in the format <path.to.module>.<wsgi_application>
 # where <wsgi_application> is a WSGI application object.
-- url: .*  # This regex directs all routes to main.app
-  script: main.bottle
+#- url: .*  # This regex directs all routes to main.app
+#  script: main.bottle
 
 # Third party libraries that are included in the App Engine SDK must be listed
 # here if you want to use them.  See
@@ -36,3 +36,21 @@ handlers:
 #libraries:
 #- name: jinja2
 #  version: latest
+
+- url: /
+  static_files: public/index.html
+  upload: public/index.html
+- url: /api/.*
+  script: main.bottle
+- url: /css/(.*\.css)
+  mime_type: text/css
+  static_files: public/css/\1
+  upload: public/css/(.*\.css)
+- url: /js/(.*\.js)
+  mime_type: text/javascript
+  static_files: public/js/\1
+  upload: public/js/(.*\.js)
+- url: /pages/(.*\.html)
+  mime_type: text/html
+  static_files: public/pages/\1
+  upload: public/pages/(.*\.html)
