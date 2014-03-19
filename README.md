@@ -46,6 +46,18 @@ The very first deployment to GAE has to be made from the Nitrous.IO in order to 
 6. Encrypt this token as a secure global variable in the .travis.yml file `travis encrypt MY_GAE_TOKEN="<paste_token_from_clipboard>" --add -r <your_github_username/your_github_repo>`
 7. Check the .travis.yml file to see whether the new secure variable has been added
 
+
+### Setup and Build with Travis-CI
+
+1. Register for [Travis-CI](https://travis-ci.org) using your GitHub account
+2. From your Travis-CI [profile](https://travis-ci.org/profile) page, enable the newly created GitHub repository
+3. Edit this line of the .travis.yml file: `- git clone https://github.com/<your_username>/<your_repo>.git deploy`
+4. Add all file and folders `git add -A .`
+5. Commit with message `git commit -a -m 'created GAE project'`
+6. Push the update `git push origin master`
+7. You can track the build progress at the Travis-CI website
+
+
 ## Python Bottle Framework Scaffold for Google App Engine
 
 A skeleton for building Python applications on Google App Engine with the

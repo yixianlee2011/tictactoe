@@ -48,6 +48,7 @@
           ]);
 
             function FirstController($scope, $resource, $http) {
+                $scope.loaded = true;
                 $scope.supported_langugages = [{
                     language: 'python',
                     urlName: 'python'
@@ -350,11 +351,11 @@
                 <tr>
                     <td>
                         <select ng-model="bot1" ng:change="set_bot_1(bot1)" ng-options="bot as bot.name for bot in bots"
-                        ng-init="bot1 = bots[0]"></select>
+                                ng-init="bot1 = bots[0]"></select>
                     </td>
                     <td>
                         <select ng-model="bot2" ng:change="set_bot_2(bot2)" ng-options="bot as bot.name for bot in bots"
-                        ng-init="bot2 = bots[1]"></select>
+                                ng-init="bot2 = bots[1]"></select>
                     </td>
                 </tr>
                 <tr>
