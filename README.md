@@ -1,3 +1,51 @@
+## Part 1: Travis and Google App Engine (GAE)
+
+Travis-CI is used to test and deploy updates to Google App Engine.
+
+### Install Travis Ruby Gem
+
+The Travi-CI gem will be used to encrypt a OAuth2 token that will be used to push updates to Google App Engine from the Travis build.
+
+1. From the terminal, install the gem by entering `gem install travis`
+
+###Install and run GAE Python SDK
+
+From the console of your Nitrous.IO Box, execute the following commands:
+
+1. cd ~/
+2. curl http://googleappengine.googlecode.com/files/google_appengine_1.8.8.zip > gae_python-1.8.8.zip
+3. unzip gae_python-1.8.8.zip
+4. rm gae_python-1.8.8.zip
+
+Sign up for Google App Engine if you haven’t. Create a new GAE Application. Fork this GitHub repository to your own GitHub account: https://github.com/andrewbeng89/IS429GAETest/. Clone the forked repository to your Nitrous.IO Box:
+
+1. `git clone git@github.com:<your-github-account>/tictactoe.git`
+2. Run the development server on Nitrous.IO: `~/google_appengine/dev_appserver.py --host=0.0.0.0 --port=8080 ~/tictactoe/`
+3. To preview the app, select “Port 8080” from the “Preview” dropdown:
+
+To configure a new GitHub repository and GAE app:
+
+2. `cd tictactoe`
+3. Reomve the .git directory `rm -rf .git`
+4. Create a new GitHub repository with your account
+5. Initialise the demo app as a git repo: `git init`
+6. Add the remote to the newly create GitHub repository `git remote add origin git@github.com:<your_username>/<your_new_repo>.git`
+7. Create a new GAE application [here](https://appengine.google.com/)
+8. Open the app.yaml file and edit the following line: `application: <new-gae-app-id>`
+
+
+### First Deploy to GAE
+
+The very first deployment to GAE has to be made from the Nitrous.IO in order to retrieve the OAuth2 refresh_token which Travis-CI will use later
+
+1. From the console, enter `appcfg.py --noauth_local_webserver --oauth2 update ./`
+2. A link will be displayed, followed by a promt to enter an access code. Open the link in a new browser tab and allow Google to grant access. Copy the access code displayed to the clipboard
+3. Paste the access code in the VM terminal and hit return
+4. Open the .appcfg_oauth2_tokens (JSON) file and copy the value of the refresh_token field
+5. Remove this line from the .travis.yml file `secure: <existing secure token>`
+6. Encrypt this token as a secure global variable in the .travis.yml file `travis encrypt MY_GAE_TOKEN="<paste_token_from_clipboard>" --add -r <your_github_username/your_github_repo>`
+7. Check the .travis.yml file to see whether the new secure variable has been added
+
 ## Python Bottle Framework Scaffold for Google App Engine
 
 A skeleton for building Python applications on Google App Engine with the

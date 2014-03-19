@@ -11,6 +11,12 @@ from bottle import route, request, run, redirect
 import json
 import urllib
 from google.appengine.api import urlfetch
+from google.appengine.ext import ndb
+
+class Bot(ndb.Model):
+  name = ndb.StringProperty()
+  language = ndb.StringProperty()
+  code = ndb.StringProperty()
 
 def verify_service(requestJSON, url):
       params = urllib.urlencode({'jsonrequest': requestJSON})
@@ -40,6 +46,18 @@ def verify(problem, tests, url):
   result = verify_service(requestJSON,url)
   return result
 
+@bottle.route('/api/post_bot')
+def use_verify_service():
+  name = request.params.get('name')
+  language = request.params.get('language')
+  code = request.params.get('code')
+  new_bot = Bot(name = name,
+                language = language,
+                code = code)
+  new_bot.put()
+  # result = json.dumps({"name":name,"language":langauge,"code":code})
+  return 'true'
+
 @bottle.route('/api/use_verify_service')
 def use_verify_service():
   url = "http://ec2-54-251-204-6.ap-southeast-1.compute.amazonaws.com/python"
@@ -48,9 +66,15 @@ def use_verify_service():
   result = verify(problem, tests, url)
   return result 
 
+@bottle.route('/api/get_bots')
+def use_verify_service():
+  bots = Bot.query().fetch(40)
+  result = []
+  for bot in bots:
+    result.append(bot.to_dict())
+  return json.dumps(result) 
+
 @bottle.error(404)
 def error_404(error):
   """Return a custom 404 error."""
   return 'Sorry, Nothing at this URL.'
-
-

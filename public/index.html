@@ -47,7 +47,7 @@
             }
           ]);
 
-            function FirstController($scope, $resource) {
+            function FirstController($scope, $resource, $http) {
                 $scope.supported_langugages = [{
                     language: 'python',
                     urlName: 'python'
@@ -84,15 +84,20 @@
                     language: 'python',
                     code: 'def play_game(board,side): return "___,___,___"'
                 };
-
+                
+                $http.get('/api/get_bots').success(function(data, status, headers, config) {
+                  $scope.bots = data;
+                });
+                
                 $scope.add_bot = function () {
-                    $scope.bots.push($scope.new_bot);
-                    $scope.new_bot = {};
+                    $http.get('/api/post_bot', {
+                      params: $scope.new_bot
+                    }).success(function(data, status, headers, config) {
+                      console.log(data);
+                      $scope.bots.push($scope.new_bot);
+                      $scope.new_bot = {};
+                    });
                 }
-
-                $scope.bots.push(first_bot);
-                $scope.bots.push(skip_bot);
-                $scope.bots.push(bad_bot);
 
                 //Some example code for each language.
                 $scope.d = {
