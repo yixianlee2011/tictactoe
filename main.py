@@ -98,8 +98,6 @@ def use_verify_service():
   bots = Bot.query().fetch(100)
   result = []
   for bot in bots:
-    b = bot.to_dict()
-    b[id] = bot.key().id()
     result.append(bot.to_dict())
   return json.dumps(result) 
 
