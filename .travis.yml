@@ -1,0 +1,18 @@
+language: python
+python:
+- '2.7'
+before_script:
+- cd ..
+- wget http://googleappengine.googlecode.com/files/google_appengine_1.8.8.zip
+- unzip google_appengine_1.8.8.zip
+- rm google_appengine_1.8.8.zip
+- sudo apt-get install python-imaging
+install:
+- sudo pip install -r requirements.txt --use-mirrors
+script:
+- git clone https://github.com/andrewbeng89/tictactoe.git deploy
+after_success:
+- google_appengine/appcfg.py --oauth2_refresh_token=$MY_GAE_TOKEN update deploy/
+env:
+  global:
+    secure: kmReiWNc2hpIfBpm6mRrKbDjRPsC11r4CmC1LxE8B5xTWv4ROzgJA+dYNvueWrOeG9fU85kUyY64+w4BphdywSY893nllG7NVQ4DUdL/yt551jhKa73P1WENRO/kAqp0I+7MGi/8QXinMy1rnWXY5lwZnRu51Xj58Y//x7RTu3s=
