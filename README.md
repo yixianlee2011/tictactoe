@@ -58,6 +58,8 @@ The very first deployment to GAE has to be made from the Nitrous.IO in order to 
 7. You can track the build progress at the Travis-CI website
 
 
+### View the GameBots demo app [here](http://gamebots-python.appspo.com)
+
 ## Python Bottle Framework Scaffold for Google App Engine
 
 A skeleton for building Python applications on Google App Engine with the

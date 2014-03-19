@@ -18,6 +18,16 @@ class Bot(ndb.Model):
   language = ndb.StringProperty()
   code = ndb.StringProperty()
 
+class GameResult(ndb.Model):
+  bot1 = ndb.ReferenceProperty()
+  bot2 = 
+  created = 
+  result = ndb.IntegerProperty()
+  
+def add_result(bot1,bot2,result):
+  gr = GameResult(bot1=bot1, bot2=bot2, result=result)
+  gr.put()
+
 def verify_service(requestJSON, url):
       params = urllib.urlencode({'jsonrequest': requestJSON})
 
