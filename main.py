@@ -19,14 +19,20 @@ class Bot(ndb.Model):
   code = ndb.StringProperty()
 
 class GameResult(ndb.Model):
-  bot1 = ndb.ReferenceProperty()
-  bot2 = 
-  created = 
+  bot1 =  ndb.KeyProperty(kind=Bot)
+  bot2 =  ndb.KeyProperty(kind=Bot)
+  created = ndb.DateTimeProperty(auto_now_add=True)
   result = ndb.IntegerProperty()
   
 def add_result(bot1,bot2,result):
   gr = GameResult(bot1=bot1, bot2=bot2, result=result)
   gr.put()
+
+def list_results():
+  results = []
+  for gr in GameResult.all():
+    results.append({"bot1":gr.bot1.name, "bot2":gr.bot2.name,"result":gr.result})
+    return results
 
 def verify_service(requestJSON, url):
       params = urllib.urlencode({'jsonrequest': requestJSON})
