@@ -30,9 +30,20 @@ def add_result(bot1,bot2,result):
 
 def list_results():
   results = []
+  score = {}
   for gr in GameResult.all():
     results.append({"bot1":gr.bot1.name, "bot2":gr.bot2.name,"result":gr.result})
-    return results
+    if score.has_key(gr.bot1.key().id()):
+      score[gr.bot1.key().id()] += gr.result
+    else:
+      score[gr.bot1.key().id()] = gr.result
+      
+    if score.has_key(gr.bot2.key().id()):
+      score[gr.bot2.key().id()] -=gr.result
+    else:
+      score[gr.bot2.key().id()] = -gr.result
+    
+    return (results, score)
 
 def verify_service(requestJSON, url):
       params = urllib.urlencode({'jsonrequest': requestJSON})
@@ -87,6 +98,8 @@ def use_verify_service():
   bots = Bot.query().fetch(40)
   result = []
   for bot in bots:
+    b = bot.to_dict()
+    b[id] = bot.key().id()
     result.append(bot.to_dict())
   return json.dumps(result) 
 
