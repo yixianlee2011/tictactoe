@@ -7,10 +7,10 @@ before_script:
 - unzip google_appengine_1.8.8.zip
 - rm google_appengine_1.8.8.zip
 - sudo apt-get install python-imaging
+- sudo pip uninstall nose
 install:
 - sudo pip install -r requirements.txt --use-mirrors
 - sudo pip install WebTest
-- sudo pip uninstall nose
 - sudo pip install nose
 - sudo pip install nosegae
 script:
