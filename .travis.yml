@@ -9,12 +9,12 @@ before_script:
 - sudo apt-get install python-imaging
 install:
 - sudo pip install -r requirements.txt --use-mirrors
-script:
-- git clone https://github.com/andrewbeng89/tictactoe.git deploy
 - sudo pip install WebTest
 - sudo pip install nose
 - sudo pip install nosegae
-- nosetests deploy/test.py --with-gae --gae-lib-root=~/google_appengine
+script:
+- git clone https://github.com/andrewbeng89/tictactoe.git deploy
+- nosetests deploy/test.py --with-gae --gae-lib-root=./google_appengine
 after_success:
 - google_appengine/appcfg.py --oauth2_refresh_token=$MY_GAE_TOKEN update deploy/
 env:
