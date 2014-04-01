@@ -13,7 +13,8 @@ install:
 - sudo easy_install -U nosegae
 script:
 - git clone https://github.com/andrewbeng89/tictactoe.git deploy
-- nosetests deploy/test.py --with-gae --gae-lib-root=./google_appengine
+- cd deploy
+- nosetests
 after_success:
 - google_appengine/appcfg.py --oauth2_refresh_token=$MY_GAE_TOKEN update deploy/
 env:
