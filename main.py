@@ -93,7 +93,7 @@ def use_verify_service():
   result = verify(problem, tests, url)
   return result 
 
-@bottle.route('/api/get_bots')
+@bottle.route('/api/get_bot')
 def use_verify_service():
   bots = Bot.query().fetch(100)
   result = []
