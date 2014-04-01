@@ -7,9 +7,11 @@ before_script:
 - unzip google_appengine_1.8.8.zip
 - rm google_appengine_1.8.8.zip
 - sudo apt-get install python-imaging
+- echo "y"|sudo pip uninstall nose
 install:
 - sudo pip install -r requirements.txt --use-mirrors
 - sudo easy_install -U WebTest
+- sudo easy_install -U nose
 - sudo easy_install -U nosegae
 script:
 - git clone https://github.com/andrewbeng89/tictactoe.git deploy
