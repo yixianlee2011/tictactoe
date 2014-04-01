@@ -1,7 +1,6 @@
-from webtest import TestApp
 import main
 
 def test_functional():
-    app = TestApp(main.app)
+    app = TestApp(main.bottle)
 
-    assert app.get('/api/get_bots').status == '200 OK'
+    assert mywebapp.index() == 'Hi!'
