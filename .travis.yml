@@ -9,6 +9,8 @@ before_script:
 - sudo apt-get install python-imaging
 install:
 - sudo pip install -r requirements.txt --use-mirrors
+- sudo easy_install WebTest
+- sudo easy_install nosegae
 script:
 - git clone https://github.com/andrewbeng89/tictactoe.git deploy
 - nosetests deploy/test.py --with-gae --gae-lib-root=./google_appengine
