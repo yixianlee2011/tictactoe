@@ -10,7 +10,6 @@ before_script:
 install:
 - sudo pip install -r requirements.txt --use-mirrors
 - sudo pip install WebTest
-- sudo pip install nose
 - sudo pip install nosegae
 script:
 - git clone https://github.com/andrewbeng89/tictactoe.git deploy
