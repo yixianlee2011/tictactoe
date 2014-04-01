@@ -7,7 +7,6 @@ before_script:
 - unzip google_appengine_1.8.8.zip
 - rm google_appengine_1.8.8.zip
 - sudo apt-get install python-imaging
-- echo "y"|sudo pip uninstall nose
 install:
 - sudo pip install -r requirements.txt --use-mirrors
 - sudo pip install nose
@@ -16,7 +15,7 @@ install:
 script:
 - git clone https://github.com/andrewbeng89/tictactoe.git deploy
 - cd deploy
-- nosetests
+- /usr/local/bin/nosetests
 after_success:
 - google_appengine/appcfg.py --oauth2_refresh_token=$MY_GAE_TOKEN update deploy/
 env:
