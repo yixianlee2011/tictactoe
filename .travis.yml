@@ -10,9 +10,11 @@ before_script:
 install:
 - sudo pip install -r requirements.txt --use-mirrors
 - sudo pip install WebTest
+- sudo pip uninstall nose
+- sudo pip install nose
+- sudo pip install nosegae
 script:
 - git clone https://github.com/andrewbeng89/tictactoe.git deploy
-- sudo pip install nosegae
 - nosetests deploy/test.py --with-gae --gae-lib-root=./google_appengine
 after_success:
 - google_appengine/appcfg.py --oauth2_refresh_token=$MY_GAE_TOKEN update deploy/
