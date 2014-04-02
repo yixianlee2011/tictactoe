@@ -17,7 +17,7 @@ From the console of your Nitrous.IO Box, execute the following commands:
 3. unzip gae_python-1.8.8.zip
 4. rm gae_python-1.8.8.zip
 
-Sign up for Google App Engine if you haven’t. Create a new GAE Application. Fork this GitHub repository to your own GitHub account: https://github.com/andrewbeng89/IS429GAETest/. Clone the forked repository to your Nitrous.IO Box:
+Sign up for Google App Engine if you haven’t. Create a new GAE Application. Fork this GitHub repository to your own GitHub account: https://github.com/andrewbeng89/tictactoe/. Clone the forked repository to your Nitrous.IO Box:
 
 1. `git clone git@github.com:<your-github-account>/tictactoe.git`
 2. Run the development server on Nitrous.IO: `~/google_appengine/dev_appserver.py --host=0.0.0.0 --port=8080 ~/tictactoe/`
