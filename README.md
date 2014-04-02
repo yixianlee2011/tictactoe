@@ -58,6 +58,15 @@ The very first deployment to GAE has to be made from the Nitrous.IO in order to 
 7. You can track the build progress at the Travis-CI website
 
 
+### Functional and Unit Testing with Nose and Travis-CI
+
+The Nose module allows developers to create simple functional and unit tests. In this sample app, the tests are in the /test.py file. This file tests the funcitonality of a single API call /api/get_bots. To break this test:
+
+1. Edit line 96 in main.py to `@bottle.route('/api/get_bot')`
+2. Commit and push the changes
+3. Track the build progress on travis-ci
+
+
 ### View the GameBots demo app [here](http://gamebots-python.appspo.com)
 
 ## Python Bottle Framework Scaffold for Google App Engine
