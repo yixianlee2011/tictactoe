@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/andrewbeng89/tictactoe.svg?branch=master)](https://travis-ci.org/andrewbeng89/tictactoe)
+
 ## Part 1: Travis and Google App Engine (GAE)
 
 Travis-CI is used to test and deploy updates to Google App Engine.
