@@ -87,7 +87,7 @@ def use_verify_service():
 
 @bottle.route('/api/use_verify_service')
 def use_verify_service():
-  url = "http://ec2-54-251-204-6.ap-southeast-1.compute.amazonaws.com/python"
+  url = "http://162.222.183.53/python"
   problem = request.params.get('problem')
   tests = request.params.get('tests')
   result = verify(problem, tests, url)

@@ -1,5 +1,10 @@
 [![Build Status](https://travis-ci.org/andrewbeng89/tictactoe.svg?branch=master)](https://travis-ci.org/andrewbeng89/tictactoe)
 
+### Change in verfification server URL
+
+Please note that the code verification service URL has been shifted to [http://162.222.183.53](http://162.222.183.53). The URL has been updated in this example app.
+
+
 ## Part 1: Travis and Google App Engine (GAE)
 
 Travis-CI is used to test and deploy updates to Google App Engine.
