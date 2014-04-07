@@ -82,13 +82,13 @@
 		
 		$('#verifyBot').click(function() {			
 			var t = $('#testCode').val();
-			var bc = $('#botCode').val();
-
+			var bc = $('#botCode').val();  
+      
 			$.ajax({
 			      type: "POST",
-			      url: "service_servlet",
+            url: "/api/verify_service_m",
 			      data: { "tests" : t, "bots_code" : bc  },
-				  success : function(data){
+				    success : function(data){
 			              $('#result').html(data);
 			              var d = JSON.parse(data);
 			              

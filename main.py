@@ -47,7 +47,7 @@ def list_results():
 
 def verify_service(requestJSON, url):
       params = urllib.urlencode({'jsonrequest': requestJSON})
-
+      print params
       deadline = 10
     
       result = urlfetch.fetch(url=url,
@@ -105,3 +105,16 @@ def use_verify_service():
 def error_404(error):
   """Return a custom 404 error."""
   return 'Sorry, Nothing at this URL.'
+
+@bottle.post('/api/verify_service_m')
+def verify_service_m():  
+  bots_code_m = request.forms.get("bots_code")
+  #syntax testing
+  bots_code_m+="function aguess(a,b,c,d){ return [1,1] }";
+  tests_m = request.forms.get("tests");
+  d = {"tests":tests_m, "solution":bots_code_m}
+  url = "http://162.222.183.53/js"
+  requestJSON = json.dumps(d)
+  result = verify_service(requestJSON,url)
+  print result 
+  return result
