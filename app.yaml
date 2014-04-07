@@ -38,8 +38,8 @@ handlers:
 #  version: latest
 
 - url: /
-  static_files: public/mastermind.html
-  upload: public/mastermind.html
+  static_files: public/index.html
+  upload: public/index.html
   
 - url: /api/.*
   script: main.bottle
