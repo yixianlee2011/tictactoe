@@ -96,7 +96,7 @@ def use_verify_service():
 
 @bottle.route('/api/get_bots')
 def use_verify_service():
-  bots = Bot.query().fetch(100)
+  bots = Bot.query().fetch(100
   result = []
   for bot in bots:
     result.append(bot.to_dict())
