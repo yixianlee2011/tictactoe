@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Mastermind Coding Game</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom CSS -->
+    <link href="css/scrolling-nav.css" rel="stylesheet" type="text/css">
+
+
+
+  <script language='JavaScript' src='js/mastermind.js'></script>
+	
+	
+	<!-- Logging in -->
+	<script src='https://cdn.firebase.com/js/simple-login/1.3.2/firebase-simple-login.js'></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.7/angular.min.js"></script>
+	 <script src="//cdn.firebase.com/js/client/1.0.6/firebase.js"></script>
+	 <script src="//cdn.firebase.com/libs/angularfire/0.7.1/angularfire.min.js"></script>
+	 <script src="app.js"></script>
+	 
+    <!-- Enable google analytics -->
+    <script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	
+	  ga('create', 'UA-49265214-1', 'icyyxer.appspot.com');
+	  ga('send', 'pageview');
+	
+	</script>
+	
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-49265214-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+	<!-- Enabling Google Analytics Social Tracking code Starts Here -->
+	<script type="text/javascript" src="http://icyyxer.appspot.com/wp-content/uploads/ga_social_tracking.js"></script>
+	<!-- Enabling Google Analytics Social Tracking code Ends Here -->
+	
+	
+	<meta property="og:title" content="Mastermind Coding Game"/> 
+    <meta property="og:type" content="website"/> 
+    <meta property="og:url" content="http://icyyxer.appspot.com/"/>
+    <meta property="og:image" content="http://icyyxer.appspot.com/MASTERMINDCODINGLOGO.jpg"/>   
+    <meta property="og:description" content="Think you can code the best next move for Mastermind? Challenge the other pro coders from around the world in Mastermind!"/>
+    
+    
+    
+    <!-- firebase -->
+    
+     <script src="https://cdn.firebase.com/v0/firebase.js"></script>
+ 	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    
+    <!-- version 1.1; see mastermind.js for comments  -->
+    
+    
+ <!-- verify code  -->
+ <script src="js/jquery-1.10.2.js"></script>
+ <script>
+	$(document).ready(function() {
+		
+		$('#botCode').keyup(function (){
+			$('#createBot').attr("disabled","disabled");
+			$('#result').html("");
+		});
+		
+		$('#verifyBot').click(function() {			
+			var t = $('#testCode').val();
+			var bc = $('#botCode').val();
+
+			$.ajax({
+			      type: "POST",
+			      url: "service_servlet",
+			      data: { "tests" : t, "bots_code" : bc  },
+				  success : function(data){
+			              $('#result').html(data);
+			              var d = JSON.parse(data);
+			              
+			              //enable the button
+			              if (d.solved ==true){
+			            	  alert("Code Verifed, You can submit it now");
+			            	  $('#createBot').removeAttr("disabled");
+			              }else{
+			            	  alert("Error, Please look at the error message below.\n< Note!, any changes to the code will clear the message. >");
+			              }
+	          	}			       
+			  });
+		});
+	});
+</script>
+    
+	
+</head>
+
+<!-- The #page-top ID is part of the scrolling feature - the data-spy and data-target are part of the built-in Bootstrap scrollspy function -->
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top" onload="init()">
+
+
+<!-- FB likes/shares  -->
+  <div id="fb-root"></div>
+	<script>(function(d, s, id) {
+	  var js, fjs = d.getElementsByTagName(s)[0];
+	  if (d.getElementById(id)) return;
+	  js = d.createElement(s); js.id = id;
+	  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=233920043466562";
+	  fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));</script>
+  
+  
+  <div id="fb-root"></div>
+    <script>
+    
+    window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '233920043466562',
+      status     : true, // check login status
+      cookie     : true, // enable cookies to allow the server to access the session
+      xfbml      : true  // parse XFBML
+    });
+    
+    
+    // Here we subscribe to the auth.authResponseChange JavaScript event. This event is fired
+    // for any authentication related change, such as login, logout or session refresh. This means that
+    // whenever someone who was previously logged out tries to log in again, the correct case below 
+    // will be handled. 
+    FB.Event.subscribe('auth.authResponseChange', function(response) {
+      // Here we specify what we do with the response anytime this event occurs. 
+      if (response.status === 'connected') {
+        // The response object is returned with a status field that lets the app know the current
+        // login status of the person. In this case, we're handling the situation where they 
+        // have logged in to the app.
+        testAPI();
+      } else if (response.status === 'not_authorized') {
+        // In this case, the person is logged into Facebook, but not into the app, so we call
+        // FB.login() to prompt them to do so. 
+        // In real-life usage, you wouldn't want to immediately prompt someone to login 
+        // like this, for two reasons:
+        // (1) JavaScript created popup windows are blocked by most browsers unless they 
+        // result from direct interaction from people using the app (such as a mouse click)
+        // (2) it is a bad experience to be continually prompted to login upon page load.
+        FB.login();
+      } else {
+        // In this case, the person is not logged into Facebook, so we call the login() 
+        // function to prompt them to do so. Note that at this stage there is no indication
+        // of whether they are logged into the app. If they aren't then they'll see the Login
+        // dialog right after they log in to Facebook. 
+        // The same caveats as above apply to the FB.login() call here.
+        FB.login();
+      }
+    });
+    
+    
+    
+    };
+
+    // Load the SDK asynchronously
+    (function(d){
+     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement('script'); js.id = id; js.async = true;
+     js.src = "//connect.facebook.net/en_US/all.js";
+     ref.parentNode.insertBefore(js, ref);
+    }(document));
+
+    // Here we run a very simple test of the Graph API after login is successful. 
+    // This testAPI() function is only called in those cases. 
+    function testAPI() {
+      console.log('Welcome!  Fetching your information.... ');
+      FB.api('/me', function(response) {
+        console.log('Good to see you, ' + response.name + '.');
+      });
+    }
+  </script>
+
+  <!--
+    Below we include the Login Button social plugin. This button uses the JavaScript SDK to
+    present a graphical Login button that triggers the FB.login() function when clicked. -->
+
+  
+   
+    </script>
+  
+  
+  
+  
+  
+  <br/><br/>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#page-top">Mastermind Coding Game</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav">
+                    <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>                    
+                    <li class="page-scroll">
+                        <a href="#play">Play Now!</a>
+                    </li>
+                     <li class="page-scroll">
+                        <a href="#new_bot">Add New Bot</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#score_board">Bots Scoring Board</a>
+                    </li>                    
+                                      
+                    <li>
+                    
+                   
+                    
+                    
+                    <script>
+                    
+                    
+                    
+                    var chatRef = new Firebase('https://junkiatyeo.firebaseio.com');
+                    var auth = new FirebaseSimpleLogin(chatRef, function(error, user) {
+                      if (error) {
+                        // an error occurred while attempting login
+                        
+                         switch(error.code) {
+						      case 'INVALID_EMAIL': alert("Invalid Email!");
+						      case 'INVALID_PASSWORD': alert("Invalid Password!");
+						      default:
+						    }
+                        
+                        console.log(error);
+                      } else if (user) {
+                        // user authenticated with Firebase
+                        console.log('User ID: ' + user.id + ', Provider: ' + user.provider);
+                      } else {
+                        // user is logged out
+                      }
+                    
+                     
+                      
+                    });
+                    
+                 
+                  
+                    </script>
+                  
+                    
+                    
+					
+			            <a href="" class="dropdown-toggle" data-toggle="dropdown">Log in/Log out <b class="caret"></b></a>
+			            <ul class="dropdown-menu">
+			              <li><a href="javascript:void(0);" onclick="auth.login('facebook')"><img src="Image/fb.png" width="50%" height="50%"/></a></li>
+			             <li><a href="javascript:void(0);" onclick="auth.login('google');"><img src="Image/gp.png"  width="50%" height="50%"/></a>
+			             </li>
+			             <li><a href="javascript:void(0);" onclick="auth.logout()">Log out</a>
+			             </li>
+			            </ul>
+			               
+                    
+                    </li>
+                     
+                    <li>
+                    <script src="http://connect.facebook.net/en_US/all.js#xfbml=1&appId=233920043466562"></script><script type="text/javascript">_ga.trackFacebook();</script>
+   <div class="fb-like" data-href="http://icyyxer.appspot.com/" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true"></div>
+
+                    
+                    </li>  
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <section id="intro" class="intro-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>What is this Mastermind Coding Game?</h1>
+                    
+                    <p>
+                    <img src="Image/Mastermind.png"/>
+                    </p>
+                    
+                    <br/>
+                    
+                    <p>
+                    <b>Mastermind Coding Game</b> is a game created for YOU to show your LOVE &hearts;<br/> 
+                    for <b>Coding</b> & <b><a href="http://en.wikipedia.org/wiki/Mastermind_(board_game)">Mastermind Puzzle Game</a></b>.                 
+                    </p>
+                    
+                    <p>
+                    2 <b>coded</b> bots will compete against each other. The bot with the <b>LEAST</b> number of moves <br/> 
+                    for that particular round will be a better bot and it will move up the <a href="#score_board">ranking</a>.
+                    </p>                    
+                    
+                    
+                    <br/>
+                    
+                    <p>
+                    <h2>What can YOU do here?</h2>
+                                       
+                    <br/>
+                    <div class="page-scroll">
+                        <a class="btn btn-default" href="#play">Play the game</a>  See which of the coded bots can win!
+                    </div>
+                    
+                    <div class="page-scroll">
+                        <a class="btn btn-default" href="#new_bot">Add new bot</a>  Think the current bots are bad? Code a new one and see if YOUR BOT is better!
+                    </div>
+                    
+                    <div class="page-scroll">
+                        <a class="btn btn-default" href="#score_board">Bots Scording bot</a>  See which bot win the MOST GAMES!
+                    </div>
+                    
+                    
+                    
+                   <br/>
+                    <br/>
+                    <p>
+                    <b>Note:</b> 
+                    
+                    <br/>
+                    *Only JAVASCRIPT is supported for now. (:<br/>
+                    *This is only VERSION 1.0. Look forward for an updated version in a few days time!
+                    
+                    
+                    </p>
+                    
+                    
+                    <br/>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="play" class="play-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Play Now!</h1>
+                               
+                    Follow the following steps to see how the these 2 bots compete against each other!<br/>
+                    The bots with the least move wins!
+                    
+                    <script>
+                    var botOneCodeRun = false;
+                    var dataRef = new Firebase('https://junkiatyeo.firebaseio.com/botList/');
+                    dataRef.on('child_added', function(snapshot) {
+                    	var name = snapshot.name(), codes = snapshot.val().code;
+                    	//codes = JSON.parse(codes);
+                      	//alert('VALUE IS ' + name + " CODES " + codes);
+                      	
+                      	option = document.createElement('option');
+                      	option.value = name;
+                      	option.text = name;
+                      	botONE.appendChild(option);
+                      	
+                      	if(!botOneCodeRun){                      	
+                      		document.getElementById("myTextarea1").value=codes;
+                      		 document.getElementById("botCode").value=codes;     	
+                      		botOneCodeRun = true;
+                      	}
+                      	
+                      	option = document.createElement('option');
+                      	option.value = name;
+                      	option.text = name;                      	
+                      	botTWO.appendChild(option);
+                      	option.setAttribute("selected","selected");
+                      	document.getElementById("myTextarea2").value=codes;
+                    });
+                    
+                   
+                    function botOneChange(){
+                    	//alert("HELLO");
+                    	var selectedBot = document.getElementById("botONE").value;
+                    	var url = "https://junkiatyeo.firebaseio.com/botList/"+selectedBot;
+                    	//alert(url);
+                    	var dataRef = new Firebase(url);
+                    	//alert(dataRef);
+                    	dataRef.on('value', function(snapshot) {
+                    	 // alert("HELLO");
+                    	  var codes = snapshot.val().code;
+                    	  //codes = JSON.parse(codes);
+                    	  //alert(codes);
+                    	  document.getElementById("myTextarea1").value=codes;             	   
+                    	  
+                    	});             	
+                    	
+                    	
+                    }
+                    
+                    function botTwoChange(){
+                    	//alert("HELLO");
+                    	var selectedBot = document.getElementById("botTWO").value;
+                    	var url = "https://junkiatyeo.firebaseio.com/botList/"+selectedBot;
+                    	//alert(url);
+                    	var dataRef = new Firebase(url);
+                    	//alert(dataRef);
+                    	dataRef.on('value', function(snapshot) {
+                    	 // alert("HELLO");
+                    	  var codes = snapshot.val().code;
+                    	  //codes = JSON.parse(codes);
+                    	  //alert(codes);
+                    	  document.getElementById("myTextarea2").value=codes;
+                    	});             	
+                    	
+                    	
+                    }                    
+                    
+                  
+                    
+                    </script>
+                    
+                   
+                    
+                    
+                    <br/>
+                    <br/>
+                    
+                    <table align="center">
+						<tr><td rowspan=3 >						
+						<input type="submit" value="Step 1: Bot 1 Play" onclick="showHelp(1)">
+						<input type="submit" value="Step 2: Bot 2 Play" onclick="showHelp(2)">						
+						<input type="submit" value="Step 3: Game Result" onclick="showRes()">
+						<input type="submit" value="Step 4: Reset Game" onclick="newGame()">
+						<table>
+						
+						<tr><td><br/><br/></td></tr>
+						
+					  <tr>
+					    <td>   
+					    
+					    
+					    
+					      Bot 1  <select name="botONE" id="botONE" onchange="botOneChange()"></select>
+					    </td>
+						    <td>
+					      Bot 2 <select name="botTWO" id="botTWO" onchange="botTwoChange()"></select>    
+					    </td>
+					  </tr>
+					  <tr>
+					    <td>
+					      <textarea id = 'myTextarea1' name="myTextarea1" rows="8" cols="40" style="margin: 0px; width: 360px; height: 191px;" disabled>
+</textarea>
+					    </td> 
+						    <td>
+					      <textarea id = 'myTextarea2' name="myTextarea2" rows="8" cols="40" style="margin: 0px; width: 360px; height: 191px;" disabled>
+</textarea>
+					    </td> 
+					  </tr>
+					</table>
+					
+						    <table border=1 cellspacing=0 cellpadding=4 margin=0>
+							<tr><td id='messageTd'>&nbsp;</td></tr><tr><td>
+							    <table id='boardTable' border=0 >
+							        <!-- tr with "Guess" button will be added here. -->
+								<tr id='blackLineTr'>
+								  <td colspan=8 align="center">
+								    <img src="blackpixel.gif" id="blackHorizontalTd"
+									 width = "100%" height=3 border=0>
+								  </td>
+								</tr><tr>
+								  <script Language=JavaScript>
+								    document.write( getButtonArrayHTML() );
+								  </script>
+								</tr>  
+							    </table>
+							  </td></tr>
+						    </table>
+							
+					
+					    </table>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="new_bot" class="newbot-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Add New Bot</h1>
+                    <br/>
+                    <p>
+                    <h4>Some tips you should know:</h4>
+                    
+                    
+					*Put codes in the <b>"function bot(){...}"</b> method by replacing the codes in "...". <br/><br/>
+					*Use the <b>aguess(a,b,c,d)</b> method which takes in <u>4 int parameters</u>. Each int ranges from <u>0..6</u> (each no. represents 1 colour).<br/>
+					*<b>aguess(a,b,c,d)</b> returns an array of the <u>no. of black (same position and colour)</u> and <u>grey (same colour but wrong position)</u> results. <br/><i>(e.g. [2,1] means 2 black and 1 grey)</i><br/><br/>
+					*Do remember to <b>TEST</b> your codes with our code verification service! <br/>
+					You can only <b>SUBMIT</b> the code after the code passes the code verification.<br/>
+					
+					~~~~~~~<br/>
+					
+					</p>
+                    
+                                       
+                    <br/><br/>
+                    
+                    
+                    <table align="center">
+                    
+                    <tr>
+                    <td><b>Bot Name:</b></td> <td><input type="text" id="botInput" name="botInput" placeholder="Bot Name"></td>
+                    </tr>
+                    
+                    <tr>
+                    <td><br/></td>
+                    </tr>
+                    
+                    
+                    <tr>
+                     <td><b>Bot Codes: &nbsp;&nbsp;&nbsp;</b></td> <td><textarea id="botCode" rows="8" cols="40" style="margin: 0px; width: 360px; height: 191px;"></textarea></td>
+                    </tr>
+                    <tr>
+                     <td><b>Test Codes:&nbsp;&nbsp;&nbsp;</b></br>(Read-only)</td> <td><textarea id="testCode" rows="8" cols="40" style="margin: 0px; width: 360px; height: 50px;" readonly>assert_equal(bot());</textarea></td>
+                    </tr>
+                    <tr>
+                    <td colspan="2">
+                    	<input type="button" id="verifyBot" name="verifyBot" value="Verify Code"/>
+                    	<input type="submit" id="createBot" name="createBot" onClick="alert('You have successfully submitted your bot!')" disabled>                    	
+                    </td>
+                    
+                    </tr>                    
+                    </table>
+                    <br/>
+                    <label id="result"></label>
+                    <br/>
+                   
+					
+                    
+                    <script>
+                 // Create our Firebase reference
+                	var myBotRef = new Firebase('https://junkiatyeo.firebaseio.com/botList/');
+
+                	// Keep a mapping of firebase locations to HTML elements, so we can move / remove elements as necessary.
+                	var htmlForPath = {};
+
+                	var botName = document.getElementById("botInput2");
+                	$("#botInput").keyup(function(){
+                		botInput2.value = this.value
+                	});
+                	
+                	// Helper function that takes a new bot snapshot and adds an appropriate row to our botList table.
+                	function handleBotAdded(botSnapshot, prevBotName) {
+                		var newBotRow = $("<tr/>");
+                		newBotRow.append($("<td/>").append($("<em/>").text(botSnapshot.val().name)));
+                		newBotRow.append($("<td/>").text(botSnapshot.val().game_played));
+                		newBotRow.append($("<td/>").text(botSnapshot.val().game_won));
+                		newBotRow.append($("<td/>").text(botSnapshot.val().game_lost));
+                		newBotRow.append($("<td/>").text(botSnapshot.val().code));
+
+                		// Store a reference to the table row so we can get it again later.
+                		htmlForPath[botSnapshot.name()] = newBotRow;
+
+                		// Insert the new bot in the appropriate place in the table.
+                		if (prevBotName === null) {
+                			$("#botTable").append(newBotRow);
+                		}
+                		else {
+                			var lowerBotRow = htmlForPath[prevBotName];
+                			lowerBotRow.before(newBotRow);
+                		}
+                	}
+                	
+                	// Helper function to handle a bot object being removed; just removes the corresponding table row.
+                	function handleBotRemoved(botSnapshot) {
+                		var removedBotRow = htmlForPath[botSnapshot.name()];
+                		removedBotRow.remove();
+                		delete htmlForPath[botSnapshot.name()];
+                	}
+                	
+                	// Create a view to only receive callbacks for the last LEADERBOARD_SIZE scores
+                	var botListView = myBotRef;
+                	
+                	// Add a callback to handle when a new bot is added.
+                		botListView.on('child_added', function (newBotSnapshot, prevBotName) {
+                		handleBotAdded(newBotSnapshot, prevBotName);
+                	});
+                	
+                	// Add a callback to handle when a score is removed
+                		botListView.on('child_removed', function (oldBotSnapshot) {
+                		handleBotRemoved(oldBotSnapshot);
+                	});
+                	
+                	// Add a callback to handle when a score changes or moves positions.
+                	var changedCallback = function (botSnapshot, prevBotName) {
+                		handleBotRemoved(botSnapshot);
+                		handleBotAdded(botSnapshot, prevBotName);
+                	};
+                	botListView.on('child_moved', changedCallback);
+                	botListView.on('child_changed', changedCallback);
+                	
+                	//When adding bot entry
+                	$("#createBot").click(function (e) {
+                		var name = $("#botInput").val();
+                		var botRef = myBotRef.child(name)
+                   <!-- START -->
+                		<!-- replace the code few lines below this code with this -->
+                		var newCode = document.getElementById("botCode").value;
+                   <!-- END -->
+                		
+                		botRef.on('value', function(snapshot){
+                			if (snapshot.val() === null){
+                				var newGame_played = Number(0);
+                				var newGame_won = Number(0);
+                				var newGame_lost = Number(0);
+                				
+                				if (name.length === 0)
+                					return;
+                					
+                				var botGameRef = myBotRef.child(name);
+                				
+                				// Use setWithPriority in Firebase, and set the priority to be the game_played.
+                				botGameRef.setWithPriority({ name:name, game_played:newGame_played, game_won:newGame_won, game_lost:newGame_lost, code:newCode }, newGame_played);
+                			}
+                		});
+                	});
+                	
+                	<!-- Dont copy this code-->
+                  <!-- START -->
+                	// When the user submit entry
+                	$("#newGame").click(function (e) {
+                		var winner = "bot2";
+                		
+                		var name = $("#botInput2").val();
+                		var botGameRef = myBotRef.child(name);
+                		
+                		var oppname = $("#oppInput").val();
+                		var oppGameRef = myBotRef.child(oppname);
+                		
+                		var newGame_played = 0;
+                		var newGame_won = 0;
+                		var newGame_lost = 0;
+                		
+                		var oppnewGame_played = 0;
+                		var oppnewGame_won = 0;
+                		var oppnewGame_lost = 0;
+                		
+                		botGameRef.on('value', function(snapshot){
+                			newGame_played = (Number(snapshot.val().game_played)+1);
+                			if (winner === "bot1"){
+                				newGame_won = (Number(snapshot.val().game_won)+1);
+                				newGame_lost = Number(snapshot.val().game_lost);
+                			} else {
+                				newGame_won = Number(snapshot.val().game_won);
+                				newGame_lost = (Number(snapshot.val().game_lost)+1);
+                			}
+                			
+                		});
+                		var newCode = $("#code").val();
+                		newCode = JSON.stringify(newCode);
+
+                		var oppCode;
+                		
+                		oppGameRef.on('value', function(snapshot){
+                			oppnewGame_played = (Number(snapshot.val().game_played)+1);
+                			if (winner === "bot1"){
+                				oppnewGame_won = Number(snapshot.val().game_won);
+                				oppnewGame_lost = (Number(snapshot.val().game_lost)+1);
+                			} else {
+                				oppnewGame_won = (Number(snapshot.val().game_won)+1);
+                				oppnewGame_lost = Number(snapshot.val().game_lost);
+                			}
+                			oppCode = snapshot.val().code;
+                			oppCode = JSON.stringify(oppCode);
+                		});
+                		
+                		// Use setWithPriority in Firebase, and set the priority to be the game_played.
+                		botGameRef.setWithPriority({ name:name, game_played:newGame_played, game_won:newGame_won, game_lost:newGame_lost, code:newCode }, newGame_played);
+                		oppGameRef.setWithPriority({ name:oppname, game_played:oppnewGame_played, game_won:oppnewGame_won, game_lost:oppnewGame_lost, code:oppnewCode }, oppnewGame_played);
+                	});
+                  <!-- END -->
+					</script>
+					<div style="height:30px;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+	<!-- TABLE CSS -->
+	<style type="text/css">
+	table.imagetable {
+		font-family: verdana,arial,sans-serif;
+		font-size:11px;
+		color:#333333;
+		border-width: 1px;
+		border-color: #999999;
+		border-collapse: collapse;
+	}
+	table.imagetable th {
+		background:#b5cfd2 url('cell-blue.jpg');
+		border-width: 1px;
+		padding: 8px;
+		border-style: solid;
+		border-color: #999999;
+	}
+	table.imagetable td {
+		background:#dcddc0 url('cell-grey.jpg');
+		border-width: 1px;
+		padding: 8px;
+		border-style: solid;
+		border-color: #999999;
+	}
+	</style>
+
+
+
+    <section id="score_board" class="score-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1>Bots Scoring Board</h1>
+                    
+                    <table id="leaderboardTable" class="imagetable" align="center">
+                    <tr><th>Bot Name</th>
+                    <th>Score</th></tr>
+                    </table>
+					
+					<br/><br/>
+					
+					<!--
+						The following input text field shall be subsequently replaced with user login id, and the score.
+						The score is will be calculated using the Chess Elo Rating, 
+						(Assuming the machine's Elo rating is 1000, which is slightly higher than a beginner's rating at 800)
+						Score = [(Total ratings for all opponents)+400*(#Wins-#Losses)]/Games
+					-->
+					<input type="text" id="nameInput" placeholder="Name">
+					<input type="text" id="scoreInput" placeholder="Score">
+					
+					
+					
+					<script>
+					  var LEADERBOARD_SIZE = 10;
+					
+					  // Create our Firebase reference
+					  var scoreListRef = new Firebase('https://junkiatyeo.firebaseio.com/scoreList');
+					
+					  // Keep a mapping of firebase locations to HTML elements, so we can move / remove elements as necessary.
+					  var htmlForPath = {};
+					
+					  // Helper function that takes a new score snapshot and adds an appropriate row to our leaderboard table.
+					  function handleScoreAdded(scoreSnapshot, prevScoreName) {
+					    var newScoreRow = $("<tr/>");
+					    newScoreRow.append($("<td/>").append($("<em/>").text(scoreSnapshot.val().name)));
+					    newScoreRow.append($("<td/>").text(scoreSnapshot.val().score));
+					
+					    // Store a reference to the table row so we can get it again later.
+					    htmlForPath[scoreSnapshot.name()] = newScoreRow;
+					
+					    // Insert the new score in the appropriate place in the table.
+					    if (prevScoreName === null) {
+					      $("#leaderboardTable").append(newScoreRow);
+					    }
+					    else {
+					      var lowerScoreRow = htmlForPath[prevScoreName];
+					      lowerScoreRow.before(newScoreRow);
+					    }
+					  }
+					
+					  // Helper function to handle a score object being removed; just removes the corresponding table row.
+					  function handleScoreRemoved(scoreSnapshot) {
+					    var removedScoreRow = htmlForPath[scoreSnapshot.name()];
+					    removedScoreRow.remove();
+					    delete htmlForPath[scoreSnapshot.name()];
+					  }
+					
+					  // Create a view to only receive callbacks for the last LEADERBOARD_SIZE scores
+					  var scoreListView = scoreListRef.limit(LEADERBOARD_SIZE);
+					
+					  // Add a callback to handle when a new score is added.
+					  scoreListView.on('child_added', function (newScoreSnapshot, prevScoreName) {
+					    handleScoreAdded(newScoreSnapshot, prevScoreName);
+					  });
+					
+					  // Add a callback to handle when a score is removed
+					  scoreListView.on('child_removed', function (oldScoreSnapshot) {
+					    handleScoreRemoved(oldScoreSnapshot);
+					  });
+					
+					  // Add a callback to handle when a score changes or moves positions.
+					  var changedCallback = function (scoreSnapshot, prevScoreName) {
+					    handleScoreRemoved(scoreSnapshot);
+					    handleScoreAdded(scoreSnapshot, prevScoreName);
+					  };
+					  scoreListView.on('child_moved', changedCallback);
+					  scoreListView.on('child_changed', changedCallback);
+					
+					  // When the user presses enter on scoreInput, add the score, and update the highest score.
+					  $("#scoreInput").keypress(function (e) {
+					    if (e.keyCode == 13) {
+					      var newScore = Number($("#scoreInput").val());
+					      var name = $("#nameInput").val();
+					      $("#scoreInput").val("");
+					
+					      if (name.length === 0)
+					        return;
+					
+					      var userScoreRef = scoreListRef.child(name);
+					      
+					      // Use setWithPriority to put the name / score in Firebase, and set the priority to be the score.
+					      userScoreRef.setWithPriority({ name:name, score:newScore }, newScore);
+					    }
+					  });
+					</script>
+                    
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="new" class="new">
+    
+    <p align="center">
+    <br/>
+    &copy; Mastermind Coding Game. Version 1.0
+    </p>
+    </section>
+    
+    
+
+    <!-- Core JavaScript Files -->
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/jquery.easing.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/scrolling-nav.js"></script>
+
+</body>
+
+</html>
