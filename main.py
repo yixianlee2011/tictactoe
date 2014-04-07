@@ -95,7 +95,8 @@ def use_verify_service():
   return result 
 
 @bottle.route('/api/get_bots')
-def use_verify_service(
+def use_verify_service():
+  io.
   bots = Bot.query().fetch(100
   result = []
   for bot in bots:
