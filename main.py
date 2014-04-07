@@ -13,7 +13,7 @@ import urllib
 from google.appengine.api import urlfetch
 from google.appengine.ext import ndb
 
-'''
+
 class Bot(ndb.Model):
   name = ndb.StringProperty()
   language = ndb.StringProperty()
@@ -45,7 +45,7 @@ def list_results():
       score[gr.bot2.key().id()] = -gr.result
     
     return (results, score)
-'''
+
 def verify_service(requestJSON, url):
       params = urllib.urlencode({'jsonrequest': requestJSON})
       print params
@@ -62,7 +62,7 @@ def verify_service(requestJSON, url):
 # Run the Bottle wsgi application. We don't need to call run() since our
 # application is embedded within an App Engine WSGI application server.
 bottle = Bottle()
-'''
+
 @bottle.route('/api/currentplayer')
 def currentplayer():
   d = {"name":str(users.get_current_user())}
@@ -101,7 +101,7 @@ def use_verify_service():
   for bot in bots:
     result.append(bot.to_dict())
   return json.dumps(result) 
-'''
+
 @bottle.error(404)
 def error_404(error):
   """Return a custom 404 error."""
