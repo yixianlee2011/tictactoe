@@ -13,11 +13,11 @@ install:
 - sudo pip install WebTest
 - sudo pip install nosegae
 script:
-- git clone https://github.com/andrewbeng89/tictactoe.git deploy
+- git clone https://github.com/yixianlee2011/tictactoe.git deploy
 - cd deploy
 - /usr/local/bin/nosetests
 after_success:
 - google_appengine/appcfg.py --oauth2_refresh_token=$MY_GAE_TOKEN update deploy/
 env:
   global:
-    secure: gSyVmtxN1PGWfX0FApQGpV5JEmoKmR8FIqb08fKHbcrNaBKNYfsJ312qql2dY4WRnFvO4cIjdALvI2CczyLSRrvnsntKvomj3EUPBuQx66mVoBOctX7uNPHTBqfK1q8uluHqkiWJiHLrWnOSWkgTERS/7HA1P1UXlv/DJoZXjfM=
+    
